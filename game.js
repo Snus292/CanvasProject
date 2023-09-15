@@ -11,6 +11,8 @@ let game = {
     blocks:[],
     rows:4,
     cols:8,
+    wight:640,
+    height:360,
     sprites:{
         background: null,
         ball: null,
@@ -73,6 +75,7 @@ let game = {
         });
     },
     render(){
+        this.ctx.clearRect(0,0,this.wight, this.height);
         this.ctx.drawImage(this.sprites.background,0 ,0);
         this.ctx.drawImage(this.sprites.ball,0 ,0, this.ball.width ,this.ball.height,
             this.ball.x, this.ball.y, this.ball.width,this.ball.height);
@@ -80,8 +83,8 @@ let game = {
         this.renderBlocks();
     },
     renderBlocks(){
-        for (let bloack of this.blocks){
-            this.ctx.drawImage(this.sprites.block,bloack.x, bloack.y);
+        for (let block of this.blocks){
+            this.ctx.drawImage(this.sprites.block,block.x, block.y);
         }
     },
     start: function(){
@@ -90,10 +93,14 @@ let game = {
             this.create();
             this.run();
         });
+    },
+    random(min,max){
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 };
 
 game.ball ={
+    dx: 0,
     dy: 0,
     velocity:3,
     x:320,
@@ -102,15 +109,19 @@ game.ball ={
     height: 20,
     start() {
         this.dy = -this.velocity;
+        this.dx = game.random(-this.velocity , this.velocity);
     },
     move(){
         if (this.dy){
             this.y += this.dy;
         }
+        if (this.dx){
+            this.x += this.dx;
+        }
     }
 };
 
-game.platform= {
+game.platform = {
     velocity:6,
     dx:0,
     x:280,
@@ -144,4 +155,4 @@ game.platform= {
 window.addEventListener("load",()=> {
     game.start();
 });
-
+// <!-- перевод в другую ветку main -->
