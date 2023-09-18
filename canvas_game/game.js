@@ -11,7 +11,7 @@ let game = {
     blocks:[],
     rows:4,
     cols:8,
-    wight:640,
+    width:640,
     height:360,
     sprites:{
         background: null,
@@ -57,7 +57,7 @@ let game = {
             for (let col = 0; col < this.cols; col++){
                 this.blocks.push({
                     active: true,
-                    wight: 60,
+                    width: 60,
                     height: 20,
                     x: 64 * col + 65,
                     y: 24 * row + 35
@@ -68,6 +68,7 @@ let game = {
     update(){
         this.collideBlocks();
         this.collidePlatform();
+        this.ball.collideWorldBounds();
         this.platform.move();
         this.ball.move();
     },
@@ -92,7 +93,7 @@ let game = {
         });
     },
     render(){
-        this.ctx.clearRect(0,0,this.wight, this.height);
+        this.ctx.clearRect(0,0,this.width, this.height);
         this.ctx.drawImage(this.sprites.background,0 ,0);
         this.ctx.drawImage(this.sprites.ball,0 ,0, this.ball.width ,this.ball.height,
             this.ball.x, this.ball.y, this.ball.width,this.ball.height);
@@ -125,7 +126,7 @@ game.ball ={
     x:320,
     y:280,
     width:20,
-    height: 20,
+    height:20,
     start() {
         this.dy = -this.velocity;
         this.dx = game.random(-this.velocity , this.velocity);
@@ -150,14 +151,43 @@ game.ball ={
             }
         return false;
     },
+    collideWorldBounds(){
+        let x = this.x + this.y;
+        let y = this.y + this.dy;
+
+        let ballLeft = x;
+        let ballRight = ballLeft + this.width;
+        let ballTop = 0;
+        let ballBottom =ballTop + this.height;
+
+        let worldLeft = 0;
+        let worldRight =game.width;
+        let worldTop = 0;
+        let worldBottom = game.height;
+
+        if (ballLeft < worldLeft){
+            this.x = 0;
+            this.dx =this.velocity;
+        }else if (ballRight > worldRight){
+            this.x = worldRight -this.width;
+            this.dx = -this.velocity;
+        }else if (ballTop > worldTop){
+            this.y =0;
+            this.dy =this.velocity;
+        }else if (ballBottom > worldBottom){
+            console.log("GAME OVER");
+        }
+    },
     bumpBlock(block){
         this.dy *= -1;
         block.active = false;
     },
     bumpPlatform(platform){
-        this.dy *= -1;
-        let touchX = this.x +this.width / 2;
-        this.dx = this.velocity * platform.getTouchOffset(touchX);
+        if (this.dy > 0){
+            this.dy = -this.velocity;
+            let touchX =this.x + this.width / 2;
+            this.dx =this/velocity * platform.getTouchOffset(touchX);
+        }
     } 
 };
 
@@ -189,13 +219,13 @@ game.platform = {
         if (this.dx){
             this.x += this.dx;
             if (this.ball){
-                this.ball.x +=this.dx;
+                this.ball.x += this.dx;
             }    
         }
     },
     getTouchOffset(x){
         let diff = (this.x + this.width) - x;
-        let offset =this.width -diff;
+        let offset = this.width - diff;
         let result =2 * offset / this.width;
         return result -1;
     }
@@ -204,5 +234,5 @@ game.platform = {
 window.addEventListener("load",()=> {
     game.start();
 });
-// 11.	Уничтожаем блоки  
+// 12.	Отскок мяча от краев экрана 
 
