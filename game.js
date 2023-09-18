@@ -56,8 +56,6 @@ let game = {
         for(let row = 0; row < this.rows; row++){
             for (let col = 0; col < this.cols; col++){
                 this.blocks.push({
-                    wight: 60,
-                    height:20,
                     x: 64 * col + 65,
                     y: 24 * row + 35
                 });
@@ -67,13 +65,6 @@ let game = {
     update(){
         this.platform.move();
         this.ball.move();
-
-        for (let block of this.blocks){
-            if(this.ball.collide(bloack)){
-            this.ball.ball.bumpBlock(block);
-
-            }
-        }
     },
 
     run(){
@@ -127,22 +118,6 @@ game.ball ={
         if (this.dx){
             this.x += this.dx;
         }
-    },
-    collide(element){
-        let x = this.x+ this.dx;
-        let y = this.y+ this.dy;
-
-        if (x + this.width> element.x &&
-            x < element.x +element.width &&
-            y +this.height > elemen.y &&
-            y < element.y + element.height){
-                return true;
-
-            }
-        return false;
-    },
-    bumpBlock(block){
-        this.dy *= -1;
     }
 };
 
@@ -180,5 +155,5 @@ game.platform = {
 window.addEventListener("load",()=> {
     game.start();
 });
-// dsfsfdgdfdfsd
+// <!-- 8.	Первый взлет мяча под случайным углом  -->
 
