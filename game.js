@@ -57,6 +57,7 @@ let game = {
                 callback();
             }
         };
+
         this.preloadSprites(onResourceLoad);
         this.preloadAudio(onResourceLoad);
     },
@@ -134,7 +135,7 @@ let game = {
             this.ball.x, this.ball.y, this.ball.width,this.ball.height);
         this.ctx.drawImage(this.sprites.platform, this.platform.x,this.platform.y);
         this.renderBlocks();
-        this.ctx.fillText("Score" + this.score ,15,20);
+        this.ctx.fillText("Score" + this.score ,15, 20);
     },
     renderBlocks(){
         for (let block of this.blocks){
@@ -163,6 +164,7 @@ let game = {
 game.ball ={
     dx: 0,
     dy: 0,
+    frame: 0,
     velocity:3,
     x:320,
     y:280,
@@ -171,6 +173,15 @@ game.ball ={
     start() {
         this.dy = -this.velocity;
         this.dx = game.random(-this.velocity , this.velocity);
+        this.animate();
+    },
+    animate(){
+        setInterval(() =>{
+            ++this.frame;
+            if (this,frame > 3){
+                this.frame = 0;
+            }
+        },100);
     },
     move(){
         if (this.dy){
@@ -257,7 +268,7 @@ game.platform = {
         if (direction === KEYS.LEFT) {
             this.dx = -this.velocity;
         } else if (direction === KEYS.RIGHT){
-            this.dx =this.velocity;
+            this.dx = this.velocity;
         }
     },
     stop(){
@@ -293,5 +304,5 @@ game.platform = {
 window.addEventListener("load",()=> {
     game.start();
 });
-// 17.	Рендеринг текста
+// 18.	Покадровая анимация
 
