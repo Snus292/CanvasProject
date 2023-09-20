@@ -5,6 +5,7 @@ const KEYS= {
 };
 
 let game = {
+    running: true,
     ctx: null,
     platform: null,
     ball: null,
@@ -87,11 +88,13 @@ let game = {
     },
 
     run(){
-        window.requestAnimationFrame(()=> {
-            this.update();
-            this.render();
-            this.run();
-        });
+        if (this.running){
+            window.requestAnimationFrame(()=> {
+                this.update();
+                this.render();
+                this.run();
+            });
+        }
     },
     render(){
         this.ctx.clearRect(0,0,this.width, this.height);
@@ -168,15 +171,17 @@ game.ball ={
 
         if (ballLeft < worldLeft){
             this.x = 0;
-            this.dx =this.velocity;
+            this.dx = this.velocity;
         }else if (ballRight > worldRight){
             this.x = worldRight -this.width;
             this.dx = -this.velocity;
-        }else if (ballTop > worldTop){
+        }else if (ballTop < worldTop){
             this.y =0;
             this.dy =this.velocity;
         }else if (ballBottom > worldBottom){
-            console.log("GAME OVER");
+            game.running =false;
+            alert("GAME OVER");
+            window.location.reload();
         }
     },
     bumpBlock(block){
@@ -250,5 +255,5 @@ game.platform = {
 window.addEventListener("load",()=> {
     game.start();
 });
-// 13. Не даем платформе выйти за края экрана
+// 3.	Поражение на уровне
 
