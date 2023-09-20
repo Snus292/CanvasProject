@@ -69,6 +69,7 @@ let game = {
         this.collideBlocks();
         this.collidePlatform();
         this.ball.collideWorldBounds();
+        this.platform.collideWorldBounds();
         this.platform.move();
         this.ball.move();
     },
@@ -139,25 +140,25 @@ game.ball ={
             this.x += this.dx;
         }
     },
-    collide(element){
-        let x= this.x + this.dx;
-        let y =this.y + this;this.dy;
+    collide(element) {
+        let x = this.x + this.dx;
+        let y = this.y + this.dy;
 
         if (x + this.width > element.x &&
             x < element.x + element.width &&
             y + this.height > element.y &&
-            y < element.y + element.height){
+            y < element.y + element.height) {
                 return true;
             }
         return false;
     },
     collideWorldBounds(){
-        let x = this.x + this.y;
+        let x = this.x + this.dx;
         let y = this.y + this.dy;
 
         let ballLeft = x;
         let ballRight = ballLeft + this.width;
-        let ballTop = 0;
+        let ballTop = y;
         let ballBottom =ballTop + this.height;
 
         let worldLeft = 0;
@@ -183,10 +184,14 @@ game.ball ={
         block.active = false;
     },
     bumpPlatform(platform){
+        if (platform.dx) {
+            this.x += platform.dx;
+        }
+
         if (this.dy > 0){
             this.dy = -this.velocity;
-            let touchX =this.x + this.width / 2;
-            this.dx =this/velocity * platform.getTouchOffset(touchX);
+            let touchX = this.x + this.width / 2;
+            this.dx =this.velocity * platform.getTouchOffset(touchX);
         }
     } 
 };
@@ -228,11 +233,22 @@ game.platform = {
         let offset = this.width - diff;
         let result =2 * offset / this.width;
         return result -1;
+    },
+    collideWorldBounds(){
+        let x =this.x + this.dx;
+        let platformLeft = x;
+        let platformRight = platformLeft +this.width;
+        let worldLeft = 0;
+        let worldRight = game.width;
+
+        if (platformLeft < worldLeft || platformRight > worldRight){
+            this.dx =0;
+        }
     }
 };
 
 window.addEventListener("load",()=> {
     game.start();
 });
-// 12.	Отскок мяча от краев экрана 
+// 13. Не даем платформе выйти за края экрана
 
