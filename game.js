@@ -10,10 +10,11 @@ let game = {
     platform: null,
     ball: null,
     blocks:[],
-    rows:4,
-    cols:8,
-    width:640,
-    height:360,
+    score: 0,
+    rows: 4,
+    cols: 8,
+    width: 640,
+    height: 360,
     sprites:{
         background: null,
         ball: null,
@@ -74,10 +75,18 @@ let game = {
         this.platform.move();
         this.ball.move();
     },
+    addScore(){
+        ++this.score;
+
+        if(this.score >= this.blocks.length){
+            this.end("YOU WIN");
+        }
+    },
     collideBlocks(){
         for (let block of this.blocks){
             if (block.active && this.ball.collide(block)){
                 this.ball.bumpBlock(block);
+                this.addScore();
             }
         }
     },
@@ -107,7 +116,7 @@ let game = {
     renderBlocks(){
         for (let block of this.blocks){
             if (block.active){
-                this.ctx.drawImage(this.sprites.block,block.x, block.y);
+                this.ctx.drawImage(this.sprites.block, block.x, block.y);
             }
         }
     },
@@ -179,9 +188,7 @@ game.ball ={
             this.y =0;
             this.dy =this.velocity;
         }else if (ballBottom > worldBottom){
-            game.running =false;
-            alert("GAME OVER");
-            window.location.reload();
+            game.end("GAME OVER");
         }
     },
     bumpBlock(block){
@@ -255,5 +262,5 @@ game.platform = {
 window.addEventListener("load",()=> {
     game.start();
 });
-// 3.	Поражение на уровне
+// 15.	Победа на уровне
 
