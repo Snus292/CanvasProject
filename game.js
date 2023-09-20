@@ -24,9 +24,14 @@ let game = {
     sounds: {
         bump :null,
     },
-    init: function () {
+    init() {
         this.ctx = document.getElementById("mycanvas").getContext("2d");
+        this.setTextFont();
         this.setEvents();
+    },
+    setTextFont(){
+        this.ctx.font = "20px Arial";
+        this.ctx.fillStyle = "#FFFFFF";
     },
     setEvents(){
         window.addEventListener("keydown",e =>{
@@ -129,6 +134,7 @@ let game = {
             this.ball.x, this.ball.y, this.ball.width,this.ball.height);
         this.ctx.drawImage(this.sprites.platform, this.platform.x,this.platform.y);
         this.renderBlocks();
+        this.ctx.fillText("Score" + this.score ,15,20);
     },
     renderBlocks(){
         for (let block of this.blocks){
@@ -287,5 +293,5 @@ game.platform = {
 window.addEventListener("load",()=> {
     game.start();
 });
-// 16.	Загрузка и воспроизведение звуков
+// 17.	Рендеринг текста
 
